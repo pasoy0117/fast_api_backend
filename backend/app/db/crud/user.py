@@ -49,15 +49,15 @@ class UserCrud:
 class HashCrud:
     @staticmethod
     async def create_hash(db:AsyncSession, hash:HashCreate) -> Hashtag:
-        db_hash=Hashtag(hash.hashtag)
+        db_hash=Hashtag(hashtag=hash.hashtag)
         db.add(db_hash)
-        await db.flush(db_hash)
+        await db.flush()
         return db_hash
 
 class TodoCrud:
     @staticmethod
     async def create_todo(db:AsyncSession, todo:TodoCreate, user_id:int) -> Todo:
-        db_todo = Todo(**todo.model_dump(), user_id=user_id)
+        db_todo=Todo(**todo.model_dump(), user_id=user_id)
         db.add(db_todo)
         await db.flush()
         return db_todo
