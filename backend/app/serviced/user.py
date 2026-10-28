@@ -23,7 +23,7 @@ class UserService:
             return db_user
         except Exception:
             await db.rollback()
-            raise HTTPException(status_code=401, detail='잘못된 이메일 또는 비밀번호')
+            raise
 
     #비밀번호와 내가 쓴 비번이랑 맞아야함
     #토큰을 생성 해 줘야 함
