@@ -16,11 +16,11 @@ class UserLogin(BaseModel):
     password: Annotated[str, Field(max_length=72)]
 
 class TodoCreate(BaseModel):
-    title: str | None = None
-    content: str | None = None
+    title: str = Field(min_length=1, max_length=50)
+    content: str = Field(min_length=1, max_length=100)
 
 class HashCreate(BaseModel):
-    content: str | None = None
+    hashtag: str = Field(min_length=1, max_length=10)
 
     #default_factory : 객체를 만들 때 마다 호출 -> 매번 현재시각이 들어감
 class UserInDB(UserBase):
