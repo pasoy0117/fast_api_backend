@@ -51,3 +51,7 @@ async def del_user(user_id:int, db:AsyncSession=Depends(get_db)):
 @router.post("/todo")
 async def create_todo(todo:TodoCreate, user_id:int=Depends(get_user_id), db:AsyncSession=Depends(get_db)):
     return await TodoService.todo(db, todo, user_id)
+
+@router.post("/hashtag")
+async def create_hash(hash:HashCreate, db:AsyncSession=Depends(get_db)):
+    return await HashService.hash(db, hash)
