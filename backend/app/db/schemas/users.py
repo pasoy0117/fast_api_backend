@@ -5,24 +5,22 @@ from typing import Annotated
 
 class UserBase(BaseModel):
     email: str
-    username: str
     password: str
 
 class UserCreate(BaseModel):
     email: str
-    username: str
     password: Annotated[str, Field(max_length=72)]
 
 class UserLogin(BaseModel):
     email: str
     password: Annotated[str, Field(max_length=72)]
 
+class TodoCreate(BaseModel):
+    title: str | None = None
+    content: str | None = None
 
-class UserUpdate(BaseModel):
-    email: str | None = None
-    username: str | None = None
-    password: str | None = None
-
+class HashCreate(BaseModel):
+    content: str | None = None
 
     #default_factory : 객체를 만들 때 마다 호출 -> 매번 현재시각이 들어감
 class UserInDB(UserBase):

@@ -19,24 +19,6 @@ class UserCrud:
         await db.flush() #변경 사항을 isert로 db에 전송 -> commit을 안해서 롤백이 가능함(영구반영안함)
         return db_user
 
-
-    #put, patch 수정작업들 
-    #부분수정이기때문에 patch와 비슷함
-    #flush() : db에 sql 전송하는 메서드, 하지만 commit은 하지 않는다(확정은 안함)
-    @staticmethod
-    async def update_by_id(db:AsyncSession, user_id:int, user:UserUpdate) -> User | None:
-        db_user=await db.get(User, user_id) #select * from users where user_id=(1)
-        if db_user :
-            update_data=user.model_dump(exclude_unset=True) # 내가 전송한 값들만 부분수정하겠다(전송안했으면 그대로 둬라)
-            #일일히 어떤 필드를 수정하고, 몇개 필드를 수정할지 미리 알 수 없기 떄문에
-            #반복문 없으면 필드마다 if문으로 일일히 확인해야함
-            for key, value in update_data.items():
-                setattr(db_user, key, value) #골라낸 필드를 자동으로 대입
-
-            await db.flush() #수정한 내용을 DB에 전송, 확정은 안지음~
-            return db_user
-        return None
-
     @staticmethod
     async def delete_by_id(db:AsyncSession, user_id:int) -> User | None:
         db_user=await db.get(User, user_id)
@@ -45,11 +27,6 @@ class UserCrud:
             await db.flush()       #delete from users user_id=(1)
             return db_user  #삭제된 객체 반환
         return None
-
-    @staticmethod
-    async def get_by_username(db:AsyncSession, username:str) -> User | None:
-        result=await db.execute(select(User).filter(User.username == username))
-        return result.scalar_one_or_none()
 
 
     @staticmethod
