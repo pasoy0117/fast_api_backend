@@ -43,9 +43,21 @@ class UserService:
         return updated_user, access_token, refresh_token
 
     @staticmethod
-    async def delete_user(db:AsyncSession, user_id:int) -> User : 
-        db_user=await UserCrud.delete_by_id(db, user_id)
-        return db_user
+    async def delete_user(db: AsyncSession, user_id: int) -> dict:
+        db_user = await UserCrud.get_by_id(db, user_id)
+
+        if not db_user:
+            raise HTTPException(status_code=404, detail="User Not Found" )
+
+        try:
+            await UserCrud.delete_by_id(db, user_id)
+            await db.commit()
+
+            return {"message": "회원 삭제 완료", "user_id": user_id}
+
+        except Exception:
+            await db.rollback()
+            raise
 
 
     @staticmethod
