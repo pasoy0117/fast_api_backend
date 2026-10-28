@@ -12,17 +12,14 @@ from app.core.auth import set_auth_cookies
 from app.db.crud.user import UserCrud
 
 
-#미들웨어 : 중개역할. 요청이 들어올 때, 응답이 나가기 전에 체크하기를 원함.
-#/users/signup -> 회원가입 한 루 내 정보들을 response에 담음
-#쿠키는 서버가 응답헤더에 실어서 브라우저(클라이언트)에 보낸다.
-class TokenRefreshMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request:Request, call_next): #오버라이드
-        #요청이 라우터로 가기 직전
-        response=await call_next(request) #라우터를 실행해서 응답 받아두려고. request : 요청
-        #응답 나가기 전
-        #쿠키에 데이터를 담아 받으려면 응답 객체가 필요함.
 
-        #브라우저가 보낸 쿠키에서 토큰들을 꺼냄
+class TokenRefreshMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request:Request, call_next):
+        
+        response=await call_next(request)
+       
+
+       
         access_token=request.cookies.get("access_token")
         refresh_token=request.cookies.get("refresh_token")
 
@@ -59,6 +56,3 @@ class TokenRefreshMiddleware(BaseHTTPMiddleware):
             set_auth_cookies(response, new_access_token, new_refresh_token)
 
         return response
-
-#요청 -> 라우터 실핼해서 응답 확보 -> 엑세스 토큰 확인 -> 유효하면 그대로 반환
-             #      리프레시 토큰 유효-> 새 토큰 두개 다시 발급받아야함-> DB에 저장 -> 응답에 새 쿠키 -> 반환
