@@ -32,5 +32,5 @@ class todo_hashtag(Base):
     __tablename__="todo_hash"
 
     id:Mapped[int]=mapped_column(primary_key=True)
-    user_id:Mapped[int]=mapped_column(ForeignKey("users.user_id"))
+    todo_id:Mapped[int]=mapped_column(ForeignKey("todos.todo_id"))
     hashtag_id:Mapped[int]=mapped_column(ForeignKey("hashtag.hashtag_id"))

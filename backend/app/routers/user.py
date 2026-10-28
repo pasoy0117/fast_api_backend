@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Response
 from app.db.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.serviced import UserService
-from app.db.schemas.users import UserLogin, UserRead, UserCreate
+from app.serviced import UserService, TodoService, HashService
+from app.db.schemas.users import UserLogin, UserRead, UserCreate, TodoCreate, HashCreate
 from app.core.jwt_handler import get_password_hash
 from app.core.auth import set_auth_cookies, get_user_id
 
@@ -38,3 +38,7 @@ async def logout(response:Response):
     response.delete_cookie(key="access_token")
     response.delete_cookie(key="refresh_token")
     return True
+
+@router.post("/todo")
+async def create_todo(todo:TodoCreate, user_id:int=Depends(get_user_id), db:AsyncSession=Depends(get_db)):
+    return await TodoService.todo(db, todo, user_id)
