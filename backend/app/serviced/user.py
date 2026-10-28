@@ -44,7 +44,7 @@ class UserService:
 
     @staticmethod
     async def delete_user(db:AsyncSession, user_id:int) -> User : 
-        db_user=await UserCrud.delete_by_id(de, user_id)
+        db_user=await UserCrud.delete_by_id(db, user_id)
         return db_user
 
 

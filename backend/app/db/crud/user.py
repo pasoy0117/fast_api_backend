@@ -48,7 +48,7 @@ class UserCrud:
 
 class HashCrud:
     @staticmethod
-    async def create_hash(db:AsyncSession, hash:HashCreate) -> Hashtag:
+    async def create_hash(db: AsyncSession, hash: HashCreate) -> Hashtag:
         db_hash=Hashtag(hashtag=hash.hashtag)
         db.add(db_hash)
         await db.flush()
