@@ -48,7 +48,6 @@ class UserService:
         return db_user
 
 
-
     @staticmethod
     async def get_user(db:AsyncSession, user_id:int) -> User :
         db_user=await UserCrud.get_by_id(db, user_id)
