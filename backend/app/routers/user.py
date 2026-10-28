@@ -13,31 +13,40 @@ async def signup(user:UserCreate, db:AsyncSession =  Depends(get_db)):
     db_user=await UserService.signup(db, user)
     return db_user
 
-#Post에서 값 입력 -> userCreate로 검증 -> get_db세션주입 -> 
-# UserService 사용해서(중복검사, 해싱, 저장, 커밋)-> UserRead로 변환
 
-
-#users/login
-#response : 쿠키를 심을 응답객체
 @router.post("/login", response_model=UserRead)
 async def login(user:UserLogin,response:Response, db:AsyncSession=Depends(get_db)):
     result=await UserService.login(db, user)
     db_user, access_token, refresh_token = result
-    #토큰 두개를 쿠키로 응답에 붙인다
     set_auth_cookies(response, access_token, refresh_token)
     return db_user
 
-#미들웨어 등록
+
 @router.get("/me", response_model=UserRead)
 async def get_user(user_id:int=Depends(get_user_id), db:AsyncSession=Depends(get_db)):
     return await UserService.get_user(db, user_id)
 
-#로그아웃시 엑세스, 리프레시 토큰 쿠키 삭제
+
 @router.post("/logout")
 async def logout(response:Response):
     response.delete_cookie(key="access_token")
     response.delete_cookie(key="refresh_token")
     return True
+
+
+@router.get("/user", response_model=UserRead)
+async def get_all_user(user:UserRead):
+    users=await UserService.get_user(user)
+    return users
+
+@router.get("/{user_id}", response_model=UserRead)
+async def get_user_id(user_id:int, db:AsyncSession=Depends(get_db)):
+    db_user=await UserService.get_user(db, user_id)
+    return db_user
+
+@router.delete("/{user_id}")
+async def del_user(user_id:int, db:AsyncSession=Depends(get_db)):
+    return await UserService.delete_user(db, user_id)
 
 @router.post("/todo")
 async def create_todo(todo:TodoCreate, user_id:int=Depends(get_user_id), db:AsyncSession=Depends(get_db)):
