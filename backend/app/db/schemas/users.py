@@ -20,7 +20,7 @@ class TodoCreate(BaseModel):
     content: str | None = None
 
 class HashCreate(BaseModel):
-    content: str | None = None
+    hashtag: str | None = None
 
     #default_factory : 객체를 만들 때 마다 호출 -> 매번 현재시각이 들어감
 class UserInDB(UserBase):

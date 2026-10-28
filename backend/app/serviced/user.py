@@ -42,6 +42,11 @@ class UserService:
         await db.refresh(updated_user)
         return updated_user, access_token, refresh_token
 
+    @staticmethod
+    async def delete_user(db:AsyncSession, user_id:int) -> User : 
+        db_user=await UserCrud.delete_by_id(de, user_id)
+        return db_user
+
 
 
     @staticmethod
