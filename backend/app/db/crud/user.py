@@ -9,7 +9,11 @@ class UserCrud:
     async def get_by_id(db:AsyncSession, user_id:int) -> User | None:
         result = await db.execute(select(User).filter(User.user_id == user_id))
         return result.scalar_one_or_none()
-
+    
+    @staticmethod
+    async def get_all(db:AsyncSession) -> list[User]:
+        result=await db.execute(select(User))
+        return result.scalars().all()
 
     @staticmethod
     async def create(db:AsyncSession, user:UserCreate) -> User :

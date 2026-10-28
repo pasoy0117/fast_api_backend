@@ -33,11 +33,9 @@ async def logout(response:Response):
     response.delete_cookie(key="refresh_token")
     return True
 
-
-@router.get("/user", response_model=UserRead)
-async def get_all_user(user:UserRead):
-    users=await UserService.get_user(user)
-    return users
+@router.get("/user", response_model=list[UserRead])
+async def get_all_user(db:AsyncSession=Depends(get_db)):
+    return await UserService.get_all(db)
 
 @router.get("/{user_id}", response_model=UserRead)
 async def get_user_id(user_id:int, db:AsyncSession=Depends(get_db)):

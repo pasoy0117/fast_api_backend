@@ -67,6 +67,10 @@ class UserService:
             raise HTTPException(status_code=404, detail="User Not Found")
         return db_user
 
+    @staticmethod
+    async def get_all(db:AsyncSession) -> list[User]:
+        return await UserCrud.get_all(db)
+
 class TodoService:
     @staticmethod
     async def todo(db:AsyncSession, todo:TodoCreate, user_id:int) -> Todo:
