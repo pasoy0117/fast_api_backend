@@ -56,8 +56,8 @@ class HashCrud:
 
 class TodoCrud:
     @staticmethod
-    async def create_todo(db:AsyncSession, todo:TodoCreate) -> Todo :
-        db_todo=Todo(**todo.model_dump())
+    async def create_todo(db:AsyncSession, todo:TodoCreate, user_id:int) -> Todo:
+        db_todo = Todo(**todo.model_dump(), user_id=user_id)
         db.add(db_todo)
-        await db.flush(db_todo)
+        await db.flush()
         return db_todo
