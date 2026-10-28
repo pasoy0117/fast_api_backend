@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.db.models import User, Todo, hashtag
+from app.db.models import User, Todo, Hashtag
 from app.db.schemas.users import UserCreate, HashCreate, TodoCreate
 
 
@@ -48,8 +48,8 @@ class UserCrud:
 
 class HashCrud:
     @staticmethod
-    async def create_hash(db:AsyncSession, hash:HashCreate) -> hashtag:
-        db_hash=hashtag(hash.hashtag)
+    async def create_hash(db:AsyncSession, hash:HashCreate) -> Hashtag:
+        db_hash=Hashtag(hash.hashtag)
         db.add(db_hash)
         await db.flush(db_hash)
         return db_hash
