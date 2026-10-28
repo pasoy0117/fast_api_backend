@@ -22,7 +22,7 @@ class Todo(Base):
     content:Mapped[str]=mapped_column(String(100), nullable=False)
     user_id:Mapped[int]=mapped_column(ForeignKey("users.user_id"))
 
-class hashtag(Base):
+class Hashtag(Base):
     __tablename__="hashtag"
     
     hashtag_id:Mapped[int]=mapped_column(primary_key=True)

@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.models import User
-from app.db.schemas.users import UserCreate, UserLogin
+from app.db.models import User, Todo, Hashtag
+from app.db.schemas.users import UserCreate, UserLogin, TodoCreate, HashCreate
 from fastapi import HTTPException
-from app.db.crud import UserCrud
+from app.db.crud import UserCrud, TodoCrud, HashCrud
 from app.core.jwt_handler import get_password_hash, verify_password, create_access_token, create_refresh_token
 
 class UserService:
@@ -10,11 +10,11 @@ class UserService:
     #회원가입시, 같은 이름이 있는지 없는지 확인하려고 일단 이름 넣고 db조회함
     @staticmethod
     async def signup(db:AsyncSession, user:UserCreate) -> User :
-        if await UserCrud.get_by_username(db, user.username):
+        if await UserCrud.get_by_email(db, user.email):
             raise HTTPException(status_code=400, detail='이미 사용중인 사용자 이름이다.')
 
         hashed_pw=get_password_hash(user.password)
-        user_info=UserCreate(username=user.username, password=hashed_pw, email=user.email)
+        user_info=UserCreate(email=user.email, password=hashed_pw)
 
         try:
             db_user=await UserCrud.create(db, user_info)
@@ -51,6 +51,23 @@ class UserService:
             raise HTTPException(status_code=404, detail="User Not Found")
         return db_user
 
+class TodoService:
+    @staticmethod
+    async def todo(db:AsyncSession, todo:TodoCreate, user_id:int) -> Todo:
+        try:
+            db_todo = await TodoCrud.create_todo(db, todo, user_id)
+            await db.commit()
+            await db.refresh(db_todo)
+            return db_todo
 
-        
+        except Exception:
+            await db.rollback()
+            raise
 
+class HashService:
+    @staticmethod
+    async def hash(db:AsyncSession, hash:HashCreate) -> Hashtag:
+        db_hash=await HashCrud.create_hash(db, hash)
+        await db.commit()
+        await db.refresh(db_hash)
+        return db_hash
